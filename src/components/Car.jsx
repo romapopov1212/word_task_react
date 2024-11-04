@@ -1,20 +1,28 @@
 import {Card} from "antd";
 
-function CarCard() {
+function CarCard(props) {
+
+    const {car} = props;
 
 
     return (
         <div>
             <Card
-                title="Car"
-                extra={<a href="#">More</a>}
+                title={
+                    <div className="flex items-center gap-3">
+
+                        <span>{car?.type || "Model not available"}</span>
+                    </div>
+                }
+
+
                 style={{
                     width: 300,
                 }}
             >
-                <p>Card content</p>
-                <p>Card content</p>
-                <p>Card content</p>
+                <p>Model: {car.model}</p>
+                <p>price: {car.price}</p>
+                <p>Description: {car?.descriptions || "not"}</p>
             </Card>
         </div>
     )

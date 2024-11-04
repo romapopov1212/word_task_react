@@ -2,7 +2,9 @@ import React, {useEffect, useState} from 'react';
 
 import {Menu} from 'antd';
 import axios from "axios";
-import Car from "./components/Car.jsx";
+
+import CarCard from "./components/Car.jsx";
+
 
 function getItem(label, key, icon, children, type){
   return{
@@ -17,29 +19,40 @@ function getItem(label, key, icon, children, type){
 
 const App = () => {
 
-  const [currencies, setCurrencies] = useState([]);
+  const [car, setCar] = useState([]);
+  const [carId, setCarId] = useState(1);
+  const [carData, setCarData] = useState(null);
 
-   const fetchCurrencies = () => {
+   const fetchCars = () => {
      axios.get('http://127.0.0.1:8000/cars/').then((response) => {
-       const currenciesResponce = response.data;
+       const carResponse = response.data;
        const menuItems =[
            getItem('Список автомобилей', 'g1', null,
-               currenciesResponce.map(c=>{
+               carResponse.map(c=>{
                  return {label: c.type, key: c.id}
                }),
                "group"
            ),
        ]
-       setCurrencies(menuItems);
+       setCar(menuItems);
      })
    }
 
+  const fetchCar = () => {
+    axios.get(`http://127.0.0.1:8000/cars/${carId}`).then(response => {setCarData(response.data);})
+  }
+
    useEffect(() => {
-     fetchCurrencies();
-   },  [])
+     fetchCars();
+   },  []);
+
+
+  useEffect(() => {
+    fetchCar();
+  },  [carId]);
 
   const onClick = (e) =>{
-    console.log(e);
+    setCarId(e.key);
   };
   return (
       <div className="flex">
@@ -51,9 +64,13 @@ const App = () => {
       defaultSelectedKeys={['1']}
       defaultOpenKeys={['sub1']}
       mode="inline"
-      items={currencies}
+      items={car}
+      className="h-screen overflow-scroll"
       />
-        <Car/>
+        <div className="mx-auto my-auto">
+          {carData ? <CarCard car={carData}/> : <p>Загрузка данных автомобиля...</p>}
+        </div>
+
       </div>
   )
 };
