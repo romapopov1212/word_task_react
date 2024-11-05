@@ -4,6 +4,7 @@ import {Menu} from 'antd';
 import axios from "axios";
 
 import CarCard from "./components/Car.jsx";
+import {BrowserRouter} from "react-router-dom";
 
 
 function getItem(label, key, icon, children, type){
@@ -68,7 +69,9 @@ const App = () => {
       className="h-screen overflow-scroll"
       />
         <div className="mx-auto my-auto">
+            <BrowserRouter>
           {carData ? <CarCard car={carData}/> : <p>Загрузка данных автомобиля...</p>}
+            </BrowserRouter>
         </div>
 
       </div>
